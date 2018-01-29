@@ -4,6 +4,8 @@ import blockchain.component.Blockchain;
 import enkan.Env;
 import enkan.component.ApplicationComponent;
 import static enkan.component.ComponentRelationship.*;
+
+import enkan.component.jackson.JacksonBeansConverter;
 import enkan.component.jetty.JettyComponent;
 import enkan.config.EnkanSystemFactory;
 import enkan.system.EnkanSystem;
@@ -14,6 +16,7 @@ public class BlockchainSystemFactory implements EnkanSystemFactory {
     @Override
     public EnkanSystem create() {
         return EnkanSystem.of(
+                "beans", new JacksonBeansConverter(),
                 "blockchain", new Blockchain(),
                 "app", new ApplicationComponent("blockchain.BlockchainApplicationFactory"),
                 "http", builder(new JettyComponent())
@@ -22,7 +25,7 @@ public class BlockchainSystemFactory implements EnkanSystemFactory {
 
         ).relationships(
                 component("http").using("app"),
-                component("app").using("blockchain")
+                component("app").using("blockchain", "beans")
         );
     }
 }

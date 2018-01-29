@@ -7,6 +7,7 @@ import enkan.component.SystemComponent;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,14 +21,15 @@ public class Blockchain extends SystemComponent {
         return new ComponentLifecycle<Blockchain>() {
             @Override
             public void start(Blockchain component) {
-                chain = new LinkedList<>();
-                currentTransaction = new ArrayList<>();
+                component.chain = new LinkedList<>();
+                component.currentTransaction = new ArrayList<>();
+                component.newBlock(100, "1");
             }
 
             @Override
             public void stop(Blockchain component) {
-                chain.clear();
-                currentTransaction.clear();
+                component.chain.clear();
+                component.currentTransaction.clear();
             }
         };
     }
@@ -61,6 +63,10 @@ public class Blockchain extends SystemComponent {
         }
 
         return proof;
+    }
+
+    public List<Block> getChain() {
+        return Collections.unmodifiableList(chain);
     }
 
     public static boolean validProof(long lastProof, long proof) {

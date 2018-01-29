@@ -24,6 +24,7 @@ public class BlockchainApplicationFactory implements ApplicationFactory {
         Routes routes = Routes.define(r -> {
             r.post("/transaction/new").to(BlockchainController.class, "newTransaction");
             r.get("/mine").to(BlockchainController.class, "mine");
+            r.get("/chain").to(BlockchainController.class, "chain");
         }).compile();
 
         app.use(new DefaultCharsetMiddleware());
